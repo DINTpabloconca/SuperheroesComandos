@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -7,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace SuperheroesMVVM
 {
-    class MainWindowVM : INotifyPropertyChanged
+    class MainWindowVM : ObservableObject
     {
-        private List<Superheroe> heroes;
+        private ObservableCollection<Superheroe> heroes;
 
         private Superheroe heroeActual;
 
@@ -17,9 +20,9 @@ namespace SuperheroesMVVM
         {
             get { return heroeActual; }
             set 
-            { 
-                heroeActual = value;
-                NotifyPropertyChanged("HeroeActual");
+            {
+                SetProperty(ref heroeActual, value);
+
             }
         }
 
@@ -29,9 +32,8 @@ namespace SuperheroesMVVM
         {
             get { return total; }
             set 
-            { 
-                total = value;
-                NotifyPropertyChanged("Total");
+            {
+                SetProperty(ref total, value);
             }
         }
 
@@ -41,16 +43,20 @@ namespace SuperheroesMVVM
         {
             get { return actual; }
             set 
-            { 
-                actual = value;
-                NotifyPropertyChanged("Actual");
+            {
+                SetProperty(ref actual, value);
             }
         }
 
+        private ServicioSuperheroes servicioSuperheroes = new ServicioSuperheroes();
+        public RelayCommand AvanzarCommand { get; }
+        public RelayCommand RetrocederCommand { get; }
 
         public MainWindowVM()
         {
-            heroes = Superheroe.GetSamples();
+            AvanzarCommand = new RelayCommand(Siguiente);
+            RetrocederCommand = new RelayCommand(Anterior);
+            heroes = servicioSuperheroes.GetSuperheroes();
             HeroeActual = heroes[0];
             Total = heroes.Count;
             Actual = 1;
@@ -74,11 +80,5 @@ namespace SuperheroesMVVM
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

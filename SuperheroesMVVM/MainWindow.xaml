@@ -31,8 +31,19 @@
             <Setter Property="FontWeight"
                     Value="Bold"></Setter>
         </Style>
+        <ControlTemplate x:Key="ButtonControlTemplate1" TargetType="{x:Type Button}">
+            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ButtonControlTemplate2" TargetType="{x:Type Button}">
+            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </ControlTemplate>
 
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding Path=AvanzarCommand}" Key="A" Modifiers="Ctrl"></KeyBinding>
+        <KeyBinding Command="{Binding Path=RetrocederCommand}" Key="R" Modifiers="Ctrl"></KeyBinding>
+
+    </Window.InputBindings>
     <DockPanel x:Name="superheroeDockPanel"
                        Background="{Binding Path=HeroeActual.Heroe, Converter={StaticResource conversorFondo}}">
         <DockPanel LastChildFill="False"
@@ -64,9 +75,12 @@
         <StackPanel DockPanel.Dock="Bottom"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center">
-            <Image x:Name="leftImage"
+            <Button Command="{Binding Path=RetrocederCommand}" Template="{DynamicResource ButtonControlTemplate2}">
+                <Image x:Name="leftImage"
                            Style="{StaticResource flechas}"
-                           MouseLeftButtonUp="leftImage_MouseLeftButtonUp"></Image>
+                           ></Image>
+            </Button>
+
             <TextBlock x:Name="actualTextBlock"
                                Style="{StaticResource contador}"
                                Margin="5,0,0,5"
@@ -77,21 +91,25 @@
                                Style="{StaticResource contador}"
                                Margin="0,0,5,5"
                                Text="{Binding Path=Total}"></TextBlock>
-            <Image x:Name="rightImage"
+            <Button Command="{Binding Path=AvanzarCommand}" Template="{DynamicResource ButtonControlTemplate1}">
+                <Image x:Name="rightImage"
                            Style="{StaticResource flechas}"
                            RenderTransformOrigin="0.5,0.5"
-                           MouseLeftButtonUp="rightImage_MouseLeftButtonUp">
-                <Image.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleY="1"
+                           >
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1"
                                                 ScaleX="-1" />
-                        <SkewTransform AngleY="0"
+                            <SkewTransform AngleY="0"
                                                AngleX="0" />
-                        <RotateTransform Angle="0" />
-                        <TranslateTransform />
-                    </TransformGroup>
-                </Image.RenderTransform>
-            </Image>
+                            <RotateTransform Angle="0" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </Button>
+
+
         </StackPanel>
         <Image Source="{Binding Path=HeroeActual.Imagen}"
                        Stretch="UniformToFill"
